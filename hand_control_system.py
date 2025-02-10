@@ -22,8 +22,10 @@ class HandControlSystem:
 
         # Variable to store the last sent angle (to avoid unnecessary serial communication)
         self.last_sent_angle = -1
+        self.last_sent_servo2_angle = -1
 
-        # Connect to Arduino if we're using hardware
+
+    # Connect to Arduino if we're using hardware
         if use_hardware:
             try:
                 # Try to establish serial connection
@@ -47,7 +49,7 @@ class HandControlSystem:
             angle (int): Servo angle between 0 and 180 degrees
         """
         # Only send if we're using hardware and the angle has changed
-        if self.use_hardware and angle != self.last_sent_angle:
+        if self.use_hardware and (angle != self.last_sent_angle or servo2_angle != self.last_sent_servo2_angle):
             try:
                 # Convert angle to string and add newline
                 command = f"{angle}, {servo2_angle}\n"
@@ -55,6 +57,9 @@ class HandControlSystem:
 
                 # Update last sent angle
                 self.last_sent_angle = angle
+                self.last_sent_servo2_angle = servo2_angle
+                print(f"Sent angle: {angle}")
+                print(f"Servo2 Angle: {servo2_angle}")
 
                 # Optional: Wait for and print Arduino response
                 # response = self.arduino.readline().decode().strip()
@@ -76,12 +81,22 @@ class HandControlSystem:
         Returns:
             tuple: (gesture_name, servo_angle)
         """
-        if (openness, thumb_openness) < (0.3, 0.3):
-            return "Closed", 0, 0
-        elif (openness, thumb_openness) > (0.7, 0.7):
-            return "Open", 180, 180
+        if openness < 0.3:
+            gesture = "Closed"
+            servo_angle = 0
+        elif openness > 0.7:
+             gesture = "Open"
+             servo_angle = 180
         else:
-            return "Middle", 90, 90
+             gesture = "Middle"
+             servo_angle = 90
+        if thumb_openness < 0.3:
+            servo2_angle = 0
+        elif thumb_openness > 0.7:
+            servo2_angle = 180
+        else:
+            servo2_angle = 90
+        return gesture, servo_angle, servo2_angle
 
     def run(self):
         """
@@ -122,6 +137,9 @@ class HandControlSystem:
                 cv2.putText(frame, f"Servo Angle: {servo_angle}",
                             (10, 70), cv2.FONT_HERSHEY_SIMPLEX,
                             1, (0, 255, 0), 2)
+                cv2.putText(frame, f"Servo2 Angle: {servo2_angle}",
+                            (10, 160), cv2.FONT_HERSHEY_SIMPLEX,
+                            1, (0, 255, 0), 2)
 
                 # Show the frame
                 cv2.imshow('Hand Control System', frame)
@@ -138,7 +156,7 @@ class HandControlSystem:
 
             if self.use_hardware:
                 # Move servo to neutral position before closing
-                self.send_to_arduino(90)
+                self.send_to_arduino(90, 90)
                 time.sleep(0.5)  # Wait for servo to move
                 self.arduino.close()
                 print("Arduino connection closed")

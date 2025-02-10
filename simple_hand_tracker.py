@@ -43,7 +43,8 @@ class SimpleHandTracker:
             distances.append(distance)
 
         # Average the distances and normalize
-        avg_distance = np.mean(distances)
+        four_finger_distances = distances[1:]
+        avg_distance = np.mean(four_finger_distances)
         thumb_distance = distances[0]
 
         # These values were chosen based on typical hand proportions in the image
