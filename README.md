@@ -9,3 +9,4 @@
 - [ ] rerwite whole project from scratch
 - [x] add depth preception to greatly increase the accuracy (if possible)
 - [ ] auto detect host os to auto adjust Arduino port path
+- [ ] refactor, optimize, etc...
