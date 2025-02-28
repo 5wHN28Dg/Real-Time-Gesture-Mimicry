@@ -81,21 +81,29 @@ class HandControlSystem:
         Returns:
             tuple: (gesture_name, servo_angle)
         """
+
+        servo_angle = openness * 180
+        servo2_angle = thumb_openness * 180
+        
         if openness < 0.3:
             gesture = "Closed"
-            servo_angle = 0
+            #servo_angle = 0
         elif openness > 0.7:
              gesture = "Open"
-             servo_angle = 180
+             #servo_angle = 180
         else:
              gesture = "Middle"
-             servo_angle = 90
+             #servo_angle = 90
+
+        """ 
         if thumb_openness < 0.3:
             servo2_angle = 0
         elif thumb_openness > 0.7:
             servo2_angle = 180
         else:
             servo2_angle = 90
+        """
+
         return gesture, servo_angle, servo2_angle
 
     def run(self):

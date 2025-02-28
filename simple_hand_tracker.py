@@ -19,37 +19,63 @@ class SimpleHandTracker:
 
     def calculate_hand_openness(self, hand_landmarks) -> tuple[Any, Any]:
         """
-        Calculate how open the hand is based on the distance between fingertips and palm center.
+        Calculate how open the hand is based on the 3D distance between fingertips and palm center.
         Returns a value between 0 (closed hand) and 1 (open hand).
         """
-        # Get palm center (we use the wrist as reference)
-        palm_center = np.array([
+        # Get palm center by retrieving key landmarks in 3D (wrist, index MCP, pinky MCP)
+        wrist = np.array([
             hand_landmarks.landmark[0].x,
-            hand_landmarks.landmark[0].y
+            hand_landmarks.landmark[0].y,
+            hand_landmarks.landmark[0].z
         ])
+        index_MCP = np.array([
+            hand_landmarks.landmark[5].x,
+            hand_landmarks.landmark[5].y,
+            hand_landmarks.landmark[5].z
+        ])
+        pinky_MCP = np.array([
+            hand_landmarks.landmark[17].x,
+            hand_landmarks.landmark[17].y,
+            hand_landmarks.landmark[17].z
+        ])
+        # Calculate a more robust palm center by averaging wrist, index MCP, and pinky MCP
+        palm_center = np.mean( np.array([wrist, index_MCP, pinky_MCP]), axis=0 )
+
+        # Use the distance between index MCP and pinky MCP as the hand scale factor
+        hand_scale = np.linalg.norm(index_MCP - pinky_MCP)
 
         # Fingertip indices in MediaPipe hand model (thumb to pinky)
         fingertip_indices = [4, 8, 12, 16, 20]
 
-        # Calculate average distance from fingertips to palm
+        # Calculate average distance from fingertips to the palm center
         distances = []
         for tip_idx in fingertip_indices:
             tip_pos = np.array([
                 hand_landmarks.landmark[tip_idx].x,
-                hand_landmarks.landmark[tip_idx].y
+                hand_landmarks.landmark[tip_idx].y,
+                hand_landmarks.landmark[tip_idx].z
             ])
             # Calculate Euclidean distance
             distance = np.linalg.norm(tip_pos - palm_center)
             distances.append(distance)
 
-        # Average the distances and normalize
-        four_finger_distances = distances[1:]
-        avg_distance = np.mean(four_finger_distances)
+        # Average distances for the four fingers (excluding the thumb)
+        avg_distance = np.mean(distances[1:])
         thumb_distance = distances[0]
 
-        # These values were chosen based on typical hand proportions in the image
-        normalized_distance = np.clip((avg_distance - 0.1) / 0.2, 0, 1)
-        normalized_thumb_distance = np.clip((thumb_distance - 0.1) / 0.2, 0, 1)
+        # Normalize the distances by the hand scale to get relative measures
+        norm_avg = avg_distance / hand_scale
+        norm_thumb = thumb_distance / hand_scale
+
+        # Define empirical calibration values; adjust these based on your setup
+        # They could differ between left and right hands if necessary using an if statement
+        baseline_finger = 1   # Example baseline for left hand overall finger openness
+        baseline_thumb = 0.45 # Example baseline for left thumb openness
+
+        # Define a range for normalization (this represents the expected variation between closed and open)
+        range_val = 0.9
+        normalized_distance = np.clip((norm_avg - baseline_finger) / range_val, 0, 1)
+        normalized_thumb_distance = np.clip((norm_thumb - baseline_thumb) / range_val, 0, 1)
 
         return normalized_distance, normalized_thumb_distance
 
