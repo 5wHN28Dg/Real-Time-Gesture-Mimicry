@@ -4,7 +4,7 @@
 ---
 
 # roadmap
-- [ ] seperate the thumb from the rest
-- [ ] translate all openness values to angles
+- [x] seperate the thumb from the rest
+- [x] translate all openness values to angles
 - [ ] rerwite whole project from scratch
-- [ ] add depth preception to greatly increase the accuracy (if possible)
+- [x] add depth preception to greatly increase the accuracy (if possible)
