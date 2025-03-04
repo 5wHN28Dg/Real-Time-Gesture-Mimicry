@@ -3,10 +3,12 @@
 
 ---
 
-# roadmap
+# road map
 - [x] seperate the thumb from the rest
 - [x] translate all openness values to angles
-- [ ] rerwite whole project from scratch
 - [x] add depth preception to greatly increase the accuracy (if possible)
-- [ ] auto detect host os to auto adjust Arduino port path
+- [x] auto detect host os to auto adjust Arduino port path (kinda done, needs testing)
+- [ ] calculate thumb openness based on its distence from the base of the ring finger?
+- [ ] make it use the intel iGPU for inferece?
 - [ ] refactor, optimize, etc...
+- [ ] rewrite whole project from scratch
