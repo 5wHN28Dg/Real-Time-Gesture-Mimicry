@@ -2,10 +2,11 @@ import cv2
 import serial
 import time
 from simple_hand_tracker import SimpleHandTracker
-
+import platform
+from serial.tools import list_ports
 
 class HandControlSystem:
-    def __init__(self, use_hardware=True, com_port='COM3'):
+    def __init__(self, use_hardware=True, com_port=None):
         """
         Initialize the hand control system.
 
@@ -16,6 +17,11 @@ class HandControlSystem:
         """
         # Initialize the hand tracker
         self.tracker = SimpleHandTracker()
+
+        # if no port is provided, detect automatically
+        if com_port is None:
+            com_port = self.find_arduino_port()
+            print(f"Attempting connection on port: {com_port}")
 
         # Flag to track if we're using real hardware
         self.use_hardware = use_hardware
@@ -40,6 +46,30 @@ class HandControlSystem:
                 print(f"Failed to connect to Arduino: {e}")
                 print("Running in test mode instead")
                 self.use_hardware = False
+
+    def find_arduino_port(self):
+        """
+        Scans available serial ports and returns the port that likely belongs to an Arduino.
+        Falls back to a default port based on the host operating system if no Arduino is found.
+        """
+        # get all available ports
+        ports = list(list_ports.comports())
+
+        # look for a port with 'Arduino' in its description
+        for port in ports:
+            if "Arduino" in port.description:
+                return port.device
+        
+        # fallback defaults based on OS
+        os_name = platform.system()
+        if os_name == "Windows":
+            return "COM3"                   # default for windows
+        elif os_name == "Linux":
+            return "/dev/ttyUSB0"           # Typical default for Linux (could also be '/dev/ttyACM0')
+        elif os_name == "Darwin":
+            return "dev/tty.usbmodem14101"  # Example default for macOS
+        else:
+            return None                     # unknown system
 
     def send_to_arduino(self, angle, servo2_angle):
         """
@@ -82,27 +112,17 @@ class HandControlSystem:
             tuple: (gesture_name, servo_angle)
         """
 
-        servo_angle = openness * 180
-        servo2_angle = thumb_openness * 180
+        servo_angle = int(openness * 180)
+        servo2_angle = int(thumb_openness * 180)
         
         if openness < 0.3:
             gesture = "Closed"
-            #servo_angle = 0
+
         elif openness > 0.7:
              gesture = "Open"
-             #servo_angle = 180
+
         else:
              gesture = "Middle"
-             #servo_angle = 90
-
-        """ 
-        if thumb_openness < 0.3:
-            servo2_angle = 0
-        elif thumb_openness > 0.7:
-            servo2_angle = 180
-        else:
-            servo2_angle = 90
-        """
 
         return gesture, servo_angle, servo2_angle
 
