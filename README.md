@@ -9,7 +9,7 @@
 - [x] add depth preception to greatly increase the accuracy (if possible)
 - [x] auto detect host os to auto adjust Arduino port path (kinda done, needs testing)
 - [x] calculate thumb openness based on its distence from the base of the ring finger?
-- [ ] ignore hand rotation
+- [ ] decouple the effects of hand orientation from the openness metric
 - [ ] make it use the intel iGPU for inferece?
 - [ ] refactor, optimize, etc...
 - [ ] rewrite whole project from scratch
