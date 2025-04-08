@@ -5,6 +5,10 @@
 
 This project is a part of my learning journey, so the end goal is to be able to rewrite the whole code from scratch all by myself, and honestly I wasn't planning on making this repo public until I rewrite the whole project from scratch but hmm... I wanna experiment and see if making it public now will help me in any way and I guess it could help others too so let's see how this will go!
 
+This project uses the following for hand recognition and tracking:
+- mediapipe
+- openCV
+
 ---
 
 # road map
