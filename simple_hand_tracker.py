@@ -38,8 +38,21 @@ class SimpleHandTracker:
             hand_landmarks.landmark[17].y,
             hand_landmarks.landmark[17].z
         ])
+        middle_finger_MCP = np.array([
+            hand_landmarks.landmark[9].x,
+            hand_landmarks.landmark[9].y,
+            hand_landmarks.landmark[9].z
+        ])
+        ring_finger_MCP = np.array([
+            hand_landmarks.landmark[13].x,
+            hand_landmarks.landmark[13].y,
+            hand_landmarks.landmark[13].z
+        ])
         # Calculate a more robust palm center by averaging wrist, index MCP, and pinky MCP
         palm_center = np.mean( np.array([wrist, index_MCP, pinky_MCP]), axis=0 )
+        index_finger_center = np.mean( np.array([wrist, index_MCP]), axis=0 )
+        middle_finger_center = np.mean( np.array(wrist, middle_finger_MCP), axis=0 )
+        ring_finger_center = np.mean( np.array(wrist, ring_finger_MCP), axis=0)
 
         # get the position of the base of the ring finger for thumb openness calculation
         ring_MCP = np.array([
@@ -67,11 +80,18 @@ class SimpleHandTracker:
             distances.append(distance)
             if tip_idx == 4:
                 thump_tip = tip_pos
+            elif tip_idx == 8:
+                index_finger_tip = tip_pos
+            elif tip_idx == 12:
+                middle_finger_tip = tip_pos
+            elif tip_idx == 20:
+                pinky_tip = tip_pos
 
         # Average distances for the four fingers (excluding the thumb)
         avg_distance = np.mean(distances[1:])
         # thumb distance
         thumb_distance = np.linalg.norm(thump_tip - ring_MCP)
+        index_finger_tip = np.linalg.norm(index_finger_tip)
 
         # Normalize the distances by the hand scale to get relative measures
         norm_avg = avg_distance / hand_scale
