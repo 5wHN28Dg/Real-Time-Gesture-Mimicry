@@ -14,4 +14,4 @@
 - [ ] make it use the intel iGPU for inferece?
 - [ ] extend the code to control each finger seperetly
 - [ ] refactor, optimize, etc...
-- [ ] rewrite whole project from scratch
+- [ ] rewrite whole project from scratch completely by yourself
