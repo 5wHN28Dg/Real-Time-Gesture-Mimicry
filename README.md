@@ -20,6 +20,7 @@ This project uses the following for hand recognition and tracking:
 - [ ] decouple the effects of hand orientation from the openness metric
      - [ ] understand the math
 - [ ] make it use the intel iGPU for inferece?
+- [ ] write a proper documentation for the project
 - [ ] extend the code to control each finger seperetly
 - [ ] refactor, optimize, etc...
 - [ ] rewrite whole project from scratch all by myself
