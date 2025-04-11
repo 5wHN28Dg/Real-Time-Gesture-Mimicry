@@ -1,0 +1,6 @@
+get the the SCPs for each finger
+get the average of each one from the wrist
+calculate the distance from the tip to the average
+translate the openness value for each finger to servo motor angle
+add 3 more servo motors
+display the openness value for each finger
