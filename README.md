@@ -11,6 +11,11 @@ This project uses the following for hand recognition and tracking:
 
 #### Hint: to view the latest code changes and updates check the testing branch
 
+The code is split across 3 different files:
+- simple_hand_tracker.py: contains all the necessary code for starting the camera, detecting the hand and calculating the openness
+- hand_control_system.py: translates the openness value to servo motor angle then send it to the Arduino
+- Arduino_code.ino: sets up the Arduino to receive the servo motor angles and control the connected servo motors accordingly
+
 ---
 
 # road map
