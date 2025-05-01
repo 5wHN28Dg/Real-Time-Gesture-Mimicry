@@ -3,12 +3,8 @@ get the average of each one from the wrist
 calculate the distance from the tip to the average
 translate the openness value for each finger to servo motor angle
 add 3 more servo motors
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
 display the openness value for each finger
-=======
-=======
->>>>>>> Stashed changes
+
 display the openness value for each finger
 
 ------------------------------------
@@ -24,9 +20,4 @@ let's start with simple_hand_tracker.py:
     * __init__:
     * calculate_hand_opennness:
     * process_frame:
-<<<<<<< Updated upstream
     * run_test:
->>>>>>> Stashed changes
-=======
-    * run_test:
->>>>>>> Stashed changes
