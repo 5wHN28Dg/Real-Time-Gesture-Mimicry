@@ -65,7 +65,7 @@ class HandControlSystem:
         if os_name == "Windows":
             return "COM3"                   # default for windows
         elif os_name == "Linux":
-            return "/dev/ttyUSB0"           # Typical default for Linux (could also be '/dev/ttyACM0')
+            return "/dev/ttyACM0"           # Typical default for Linux (could also be '/dev/ttyACM0')
         elif os_name == "Darwin":
             return "dev/tty.usbmodem14101"  # Example default for macOS
         else:
@@ -198,7 +198,7 @@ def test_system():
 
     # Test without hardware first
     print("\nTesting without Arduino (test mode)...")
-    system = HandControlSystem(use_hardware=False)
+    system = HandControlSystem(use_hardware=True)
     system.run()
 
     # Optional: Test with hardware
