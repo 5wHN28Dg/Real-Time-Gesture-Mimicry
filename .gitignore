@@ -11,3 +11,6 @@ venv/
 
 # VSCode settings (if you don’t want to share them)
 .vscode/
+
+# learn.py file
+learn.py
