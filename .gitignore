@@ -1,0 +1,19 @@
+# IDE settings
+.idea/
+
+# Python bytecode
+__pycache__/
+*.py[cod]
+
+# Virtual environments
+.venv/
+venv/
+
+# VSCode settings (if you don’t want to share them)
+.vscode/
+
+# learn.py file
+learn.py
+
+# steps.txt file
+steps.txt
