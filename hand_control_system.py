@@ -65,7 +65,7 @@ class HandControlSystem:
         if os_name == "Windows":
             return "COM3"                   # default for windows
         elif os_name == "Linux":
-            return "/dev/ttyACM0"           # Typical default for Linux (could also be '/dev/ttyACM0')
+            return "/dev/ttyACM0"           # Typical default for Linux (could also be '/dev/ttyUSB0')
         elif os_name == "Darwin":
             return "dev/tty.usbmodem14101"  # Example default for macOS
         else:
