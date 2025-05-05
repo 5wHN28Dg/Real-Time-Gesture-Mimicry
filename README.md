@@ -29,6 +29,7 @@ This code started as a template from Claude AI, and I’ve since heavily hacked 
 * `hand_control_system.py` — converts openness values to servo angles and sends commands to the Arduino.
 * `Arduino_code.ino` — sets up the Arduino to receive angles and drive the servos.
 * `code dissection (WIP).md` — in-depth breakdown of how everything works.
+* `requirements.txt` — all project dependencies.
 
 ---
 
