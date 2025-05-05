@@ -60,7 +60,3 @@ This code started as a template from Claude AI, and I’ve since heavily hacked 
 ### 🤝 Contributions & Feedback
 
 Feel free to submit issues, suggest features, or even open a PR—your insights could speed up my learning and improve the project for everyone!
-
----
-
-*Let’s build something awesome together!* lol, now this feels so not me, so AI generated lol
