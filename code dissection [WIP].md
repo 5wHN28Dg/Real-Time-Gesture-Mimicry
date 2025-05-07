@@ -2,46 +2,71 @@
 
 simple_hand_tracker.py:
 
-* almost all the code is inside a single class 'simplehandtracker' except for:
-  * the if statement for running the run_test() function in case the file was run directly
-  * the imports
+- almost all the code is inside a single class 'simplehandtracker' except for:
 
-* the simplehandtracker class contains the following functions:
-  * __init__:
-    * setup mediapipe
-  * calculate_hand_openness:
-    * get the coordinates of wrist, the base of index and pinky
-    * calculate the palm_center from these 3 coordinates
-    * get the coordinates of the ring finger base
-    * calculate the distance of each finger from the center
-    * calculate the distance between the thumb tip and ring finger base
-    * get the average 4 finger distance
-    * normalize the values
+  - the if statement for running the run_test() function in case the file was run directly
+  - the imports
 
-  * process_frame:
-        so intuitively speaking, this function does the following:
-    * Access the camera
-    * start it
-    * draw hand landmarks when a hand is detected
-    * retrieve hand openness value from the calculate_hand_openness function
-    * display the hand and thumb openness value on screen
+- the simplehandtracker class contains the following functions:
 
-  * run_test: this function is run only when the simple_hand_tracker is run directly, and it is there to test the functionality of the code, it does the following:
-    * start the camera
-    * pass the info to the process_frame function to process each frame
-    * convert the hand_openness value to a servo angle
-    * display the camera live feed with the servo angle overlaid on top of it
+  - **init**:
+    - setup mediapipe
+  - calculate_hand_openness:
+
+    - get the coordinates of wrist, the base of index and pinky
+    - calculate the palm_center from these 3 coordinates
+    - get the coordinates of the ring finger base
+    - calculate the distance of each finger from the center
+    - calculate the distance between the thumb tip and ring finger base
+    - get the average 4 finger distance
+    - normalize the values
+
+  - process_frame:
+    so intuitively speaking, this function does the following:
+
+    - Access the camera
+    - start it
+    - draw hand landmarks when a hand is detected
+    - retrieve hand openness value from the calculate_hand_openness function
+    - display the hand and thumb openness value on screen
+
+  - run_test: this function is run only when the simple_hand_tracker is run directly, and it is there to test the functionality of the code, it does the following:
+    - start the camera
+    - pass the info to the process_frame function to process each frame
+    - convert the hand_openness value to a servo angle
+    - display the camera live feed with the servo angle overlaid on top of it
 
 hand_control_system.py:
-    so we have here 1 class, 6 functions, one if statement, and 6 imports.
-    class HandControlSystem:
+so we have here 1 class, 6 functions, one if statement, and 6 imports.
+class HandControlSystem:
 
-* __init__ function: initialize the script so that it is ready to run by running the following startup logic:
-  * initializes the hand tracker module
-  * starts up the process of checking and deciding the appropriate mode to run in, sw or hw mode
-  * storage for the last sent arduino angle
+- **init** function: initialize the script so that it is ready to run by running the following startup logic:
 
-* find_arduino_port: look for and connect to the arduino if found through the following:
-  * 1st try to connect find and connect to the arduino automatically doing the following:
-    * get a list of all the ports
-    * look for port with "Arduino" in the description
+  - initializes the hand tracker module
+  - starts up the process of checking and deciding the appropriate mode to run in, sw or hw mode
+  - storage for the last sent arduino angle
+
+- find_arduino_port: look for and connect to the arduino if found through the following:
+
+  - 1st try to find and connect to the arduino automatically doing the following:
+    - get a list of all the ports
+    - look for a port with "Arduino" in the description
+  - if not then fallback to OS based defaults
+
+- send_to_arduino: sends a angle command to the arduino by starting an if statement that only runs if use_hardware and one the current angle is different than the last one, the if statement contains the following:
+
+  - and handle errors gracefully a try except is used so try to:
+    - convert the angle to a string
+    - send it the arduino
+    - update the last sent angle
+    - print sent angles
+      and if you fail to send the angle then:
+    - print a message telling the user that you failed
+    - switch back to the sw/testing mode
+
+  map_openness_to_gesture: the mapping process is pretty simple, since the openness value is 0 - 1 then you just have to multiply it by 180 to get the matching servo angle and that's pretty much what I did then I used an if elif else statement to assign a keyword to the gesture variable based on the openness value.
+
+- run: just as the comment in the code says so:
+  - assign a variable to the camera video stream
+  - if the camera could't be started then throw an error message then exit if not then continue
+  - try to run the following while loop
