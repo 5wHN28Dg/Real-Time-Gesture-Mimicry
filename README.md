@@ -45,6 +45,7 @@ This code started as a template from Claude AI, and I’ve since heavily hacked 
 * [x] Separate thumb from other fingers.
 * [x] Map openness values to servo angles.
 * [x] Add depth perception to improve accuracy (if possible).
+* [x] make the openness metric more invariant to hand size and distance from camera
 * [x] Auto-detect host OS and adjust Arduino port path (needs more testing).
 * [x] Calibrate thumb openness relative to the ring-finger base.
 * [ ] Decouple hand orientation from openness metric:
@@ -52,6 +53,10 @@ This code started as a template from Claude AI, and I’ve since heavily hacked 
   * [ ] Grasp the underlying math.
 * [ ] Leverage Intel iGPU for inference.
 * [ ] Write comprehensive documentation.
+* [ ] Self-Adjusting Calibration process so that the system self-adjusts to different users’ hand sizes without manual baseline tweaking
+  * [ ] Initial Calibration Routine.
+  * [ ] Running Min/Max Tracking.
+  * [ ] Statistical & ML-Based Normalization.
 * [ ] Extend control to each finger individually (WIP).
 * [ ] Refactor and optimize.
 * [ ] Rewrite the entire project from scratch.
