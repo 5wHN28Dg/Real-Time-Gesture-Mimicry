@@ -69,4 +69,19 @@ class HandControlSystem:
 - run: just as the comment in the code says so:
   - assign a variable to the camera video stream
   - if the camera could't be started then throw an error message then exit if not then continue
+
   - try to run the following while loop
+    - read from camera
+      - if failed print an error message then exit.
+    - send the camera stream 'frame' to the process_frame function in the simple_hand_tracker aka tracker to get back the frame, hand openness, thumb openness
+    - send the openness value to the map_openness_to_gesture function to get the servo angle and gesture
+    - call the send_to_arduino function to provide it with the servo angle so that it sends it to the arduino
+    - display the current angle, gesture on the screen/camera frame
+    - show the camera stream with the text
+    - set the key 'q' as the keyboard key to close the program
+    - do some housekeeping right before you close the program:
+      - free the camera
+      - nuke any remaining window
+      - if the program is run in hw mode then set the servos to 90 then wait for the servos to move then close the serial connection with the arduino
+  
+  - test_system: this function will run if the file was run directly.
