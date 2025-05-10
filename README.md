@@ -53,11 +53,14 @@ This code started as a template from Claude AI, and I’ve since heavily hacked 
   * [ ] Grasp the underlying math.
 * [ ] Leverage Intel iGPU for inference.
 * [ ] Write comprehensive documentation 🔄
+  * [x] phase 1: initial draft
+  * [ ] phase 2: a deep dive into the technical and mathematical details
+  * [ ] phase 3: polishing
 * [ ] Self-Adjusting Calibration process so that the system self-adjusts to different users’ hand sizes without manual baseline tweaking
   * [ ] Initial Calibration Routine.
   * [ ] Running Min/Max Tracking.
   * [ ] Statistical & ML-Based Normalization.
-* [ ] Extend control to each finger individually (WIP).
+* [ ] Extend control to each finger individually (WIP) ⏸️
 * [ ] Refactor and optimize.
 * [ ] Rewrite the entire project from scratch 🔄
 
