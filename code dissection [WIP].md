@@ -95,6 +95,14 @@
   - then we are just creating 2 constants that are integers and constant, just to store the pin numbers that we gonna connect the servos's control wire to
   - create two variables to store the incoming angles in and set an optional and randomly chosen initial angle for the 2 servos
 
-- void setup:
+- void setup: setup some shit we gonna need
   - initialize serial communication, setting the baud rate at 9600
-  - 
+  - attach each servo to on of the 2 pins we defined earlier
+  - send the initial target servo angle to each servo (optional, not really necessary)
+
+- void loop: in here we gonna put the code that we want to be kept running
+  - 1st check to see if you can read any serial data of the USB connection, if yes then:
+    - read the incoming data, since we sat it up to be coming in pairs of two, save the 1st one as the new targetAngle and the 2nd as the 2nd...
+    - now we gonna use the constrain function which will act as guardrails or boundaries for the received angle, it will return the angle value to the next closest within range angle value if the received angle is out of the permitted range (if it is 190 then it will change it to 180...)
+    - now we gonna send the new angle value to the servos
+    - just some house keeping, making sure the buffer is dead empty before the loop starts all over again
