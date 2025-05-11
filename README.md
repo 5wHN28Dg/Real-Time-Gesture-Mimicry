@@ -20,6 +20,7 @@ This code started as a template from Claude AI, and I’ve since heavily hacked 
 
 * **mediapipe** (hand recognition and tracking)
 * **OpenCV** (video capture and image processing)
+* **pySerial** (Arduino detection and communication)
 
 ---
 
