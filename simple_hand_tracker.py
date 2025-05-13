@@ -1,7 +1,7 @@
 import cv2
 import mediapipe as mp
 import numpy as np
-from typing import Tuple, Any
+from typing import Tuple
 
 
 class SimpleHandTracker:
@@ -17,7 +17,7 @@ class SimpleHandTracker:
         # Used for drawing hand landmarks on the image
         self.mp_draw = mp.solutions.drawing_utils
 
-    def calculate_hand_openness(self, hand_landmarks) -> tuple[Any, Any]:
+    def calculate_hand_openness(self, hand_landmarks) -> tuple[float, float]:
         """
         Calculate how open the hand is based on the 3D distance between fingertips and palm center.
         Returns a value between 0 (closed hand) and 1 (open hand).
@@ -89,7 +89,7 @@ class SimpleHandTracker:
 
         return normalized_distance, normalized_thumb_distance
 
-    def process_frame(self, frame) -> Tuple[Any, int | Any, Any]:
+    def process_frame(self, frame) -> Tuple[np.ndarray, float, float]:
         """
         Process a video frame and return the processed frame and hand openness value.
 

@@ -5,7 +5,10 @@
 - almost all the code is inside a single class 'simplehandtracker' except for:
 
   - the if statement for running the run_test() function in case the file was run directly
-  - the imports
+  - the imports, all are obvious so I will talk only about one, which isn't so clear as to what it does:
+    - typing: just a module that is used to add hints next to functions about what kind of data they return, for example at line 20:
+        def calculate_hand_openness(self, hand_landmarks) -> tuple[float, float]:
+    the `-> tuple[float, float]` tells us that this function returns a tuple that contains two elements both of type float. The code would run just fine without this module, but it is there so it is easier for me and everyone else to check at a glance what a function return.
 
   - the simplehandtracker class contains the following functions:
 
