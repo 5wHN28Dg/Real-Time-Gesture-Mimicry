@@ -41,7 +41,7 @@ This code started as a template from Claude AI, and I’ve since heavily hacked 
 
 ---
 
-### 📈 Roadmap
+### 📝 TODO
 
 * [x] Separate thumb from other fingers.
 * [x] Map openness values to servo angles.
