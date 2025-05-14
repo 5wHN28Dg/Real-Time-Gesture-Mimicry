@@ -8,13 +8,15 @@
   - the imports, all are obvious so I will talk only about one, which isn't so clear as to what it does:
     - typing: just a module that is used to add hints next to functions about what kind of data they return, for example at line 20:
         `def calculate_hand_openness(self, hand_landmarks) -> tuple[float, float]`:
-        
+
     the `-> tuple[float, float]` tells us that this function returns a tuple that contains two elements both of type float. The code would run just fine without this module, but it is there so it is easier for me and everyone else to check at a glance what a function return.
 
   - the simplehandtracker class contains the following functions:
 
-    - **init**:
-      - setup mediapipe
+    - **init**: the constructor, in this function we set up mediapipe so it is ready to be used by the other methods, to be more specific:
+      - It initializes the MediaPipe hands module (`mp.solutions.hands`), which contains Google's pre-trained hand detection model.
+      - it creates an instance of the `SimpleHandTracker` class named `hands` with some parameters that will be used by other methods
+      - it also sets up the drawing utilities `mp.solutions.drawing_utils` that we will be using to draw the landmarks on the hand.
     - calculate_hand_openness:
 
       - get the coordinates of wrist, the base of index and pinky
