@@ -19,10 +19,10 @@ class SimpleHandTracker:
 
     def calculate_hand_openness(self, hand_landmarks) -> tuple[Any, Any]:
         """
-        Calculate how open the hand is based on the 3D distance between fingertips and palm center.
-        Returns a value between 0 (closed hand) and 1 (open hand).
+        Calculate how open each finger is based on the 3D distance between fingertips and key points on the palm.
+        Returns a value between 0 (closed) and 1 (open).
         """
-        # Get palm center by retrieving key landmarks in 3D (wrist, index MCP, pinky MCP)
+        # Retrieve the MCPs of each finger and the wrist
         wrist = np.array([
             hand_landmarks.landmark[0].x,
             hand_landmarks.landmark[0].y,
@@ -43,26 +43,25 @@ class SimpleHandTracker:
             hand_landmarks.landmark[9].y,
             hand_landmarks.landmark[9].z
         ])
-        # get the position of the base of the ring finger for thumb and ring finger openness calculation
         ring_finger_MCP = np.array([
             hand_landmarks.landmark[13].x,
             hand_landmarks.landmark[13].y,
             hand_landmarks.landmark[13].z
         ])
-        # Calculate a more robust palm center by averaging wrist, index MCP, and pinky MCP
-        palm_center = np.mean( np.array([wrist, index_MCP, pinky_MCP]), axis=0 )
 
-        # calculate a refrence point for openness value for the index, middle, ring finger
+        # calculate a reference point for openness value for the fingers
         index_finger_center = np.mean( np.array([wrist, index_MCP]), axis=0 )
-        middle_finger_center = np.mean( np.array(wrist, middle_finger_MCP), axis=0 )
-        ring_finger_center = np.mean( np.array(wrist, ring_finger_MCP), axis=0)
-
+        middle_finger_center = np.mean( np.array([wrist, middle_finger_MCP]), axis=0 )
+        ring_finger_center = np.mean( np.array([wrist, ring_finger_MCP]), axis=0)
+        pinky_finger_center = np.mean( np.array([wrist, pinky_MCP]), axis = 0)
+        
+        centers = np.array(pinky_finger_center, ring_finger_center, middle_finger_center, index_finger_center)
 
         # Use the distance between index MCP and pinky MCP as the hand scale factor
         hand_scale = np.linalg.norm(index_MCP - pinky_MCP)
 
         # Fingertip indices in MediaPipe hand model (thumb to pinky)
-        fingertip_indices = [4, 8, 12, 16, 20]
+        fingertip_indices = [20, 16, 12, 8, 4]
 
         # Calculate average distance from fingertips to the palm center
         distances = []
