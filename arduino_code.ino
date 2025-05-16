@@ -65,6 +65,7 @@ void loop() {
     middleServo.write(targetAngle3);
     indexServo.write(targetAngle4);
     thumbServo.write(targetAngle5);
+    delay(20);
     
     // Clear any remaining data in serial buffer
     while(Serial.available() > 0) {

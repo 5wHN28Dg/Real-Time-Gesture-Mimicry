@@ -59,7 +59,7 @@ class SimpleHandTracker:
         centers = [pinky_finger_center, ring_finger_center, middle_finger_center, index_finger_center]
 
         # Use the distance between index MCP and pinky MCP as the hand scale factor
-        hand_scale = np.linalg.norm(index_MCP - pinky_MCP)
+        hand_scale = np.linalg.norm(index_MCP - pinky_MCP) + 1e-6
 
         # Fingertip indices in MediaPipe hand model (pinky to thumb)
         fingertip_indices = [20, 16, 12, 8, 4]

@@ -70,7 +70,7 @@ class HandControlSystem:
         elif os_name == "Linux":
             return "/dev/ttyUSB0"           # Typical default for Linux (could also be '/dev/ttyACM0')
         elif os_name == "Darwin":
-            return "dev/tty.usbmodem14101"  # Example default for macOS
+            return "/dev/tty.usbmodem14101"  # Example default for macOS
         else:
             return None                     # unknown system
 
@@ -96,11 +96,8 @@ class HandControlSystem:
                 self.last_sent_servo_angle3 = servo_angle3
                 self.last_sent_servo_angle4 = servo_angle4
                 self.last_sent_servo_angle5 = servo_angle5
-                print(f"Sent angle: {angle}")
-                print(f"Servo Angle 2: {servo_angle2}")
-                print(f"Servo Angle 3: {servo_angle3}")
-                print(f"Servo Angle 4: {servo_angle4}")
-                print(f"Servo Angle 5: {servo_angle5}")
+                print(f"Sent angles: {angle}, {servo_angle2}, {servo_angle3}, {servo_angle4}, {servo_angle5}")
+
 
                 # Optional: Wait for and print Arduino response
                 # response = self.arduino.readline().decode().strip()
@@ -210,7 +207,7 @@ class HandControlSystem:
 
             if self.use_hardware:
                 # Move servo to neutral position before closing
-                self.send_to_arduino(90, 90)
+                self.send_to_arduino(90, 90, 90, 90, 90)
                 time.sleep(0.5)  # Wait for servo to move
                 self.arduino.close()
                 print("Arduino connection closed")
@@ -224,7 +221,7 @@ def test_system():
 
     # Test without hardware first
     print("\nTesting without Arduino (test mode)...")
-    system = HandControlSystem(use_hardware=False)
+    system = HandControlSystem(use_hardware=True)
     system.run()
 
     # Optional: Test with hardware
