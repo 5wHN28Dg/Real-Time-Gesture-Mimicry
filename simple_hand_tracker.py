@@ -1,7 +1,7 @@
 import cv2
 import mediapipe as mp
 import numpy as np
-from typing import Tuple, Any
+from typing import Tuple, List, Any
 
 
 class SimpleHandTracker:
@@ -17,10 +17,10 @@ class SimpleHandTracker:
         # Used for drawing hand landmarks on the image
         self.mp_draw = mp.solutions.drawing_utils
 
-    def calculate_hand_openness(self, hand_landmarks) -> tuple[Any, Any]:
+    def calculate_hand_openness(self, hand_landmarks) -> List[float]:
         """
         Calculate how open each finger is based on the 3D distance between fingertips and key points on the palm.
-        Returns a value between 0 (closed) and 1 (open).
+        Returns a list of values between 0 (closed) and 1 (open) for each finger (pinky to thumb).
         """
         # Retrieve the MCPs of each finger and the wrist
         wrist = np.array([
@@ -49,67 +49,64 @@ class SimpleHandTracker:
             hand_landmarks.landmark[13].z
         ])
 
-        # calculate a reference point for openness value for the fingers
-        index_finger_center = np.mean( np.array([wrist, index_MCP]), axis=0 )
-        middle_finger_center = np.mean( np.array([wrist, middle_finger_MCP]), axis=0 )
-        ring_finger_center = np.mean( np.array([wrist, ring_finger_MCP]), axis=0)
-        pinky_finger_center = np.mean( np.array([wrist, pinky_MCP]), axis = 0)
+        # Calculate a reference point for openness value for each finger
+        index_finger_center = np.mean(np.array([wrist, index_MCP]), axis=0)
+        middle_finger_center = np.mean(np.array([wrist, middle_finger_MCP]), axis=0)
+        ring_finger_center = np.mean(np.array([wrist, ring_finger_MCP]), axis=0)
+        pinky_finger_center = np.mean(np.array([wrist, pinky_MCP]), axis=0)
         
-        centers = np.array(pinky_finger_center, ring_finger_center, middle_finger_center, index_finger_center)
+        # Order matches fingertip_indices: pinky, ring, middle, index, thumb
+        centers = [pinky_finger_center, ring_finger_center, middle_finger_center, index_finger_center]
 
         # Use the distance between index MCP and pinky MCP as the hand scale factor
         hand_scale = np.linalg.norm(index_MCP - pinky_MCP)
 
-        # Fingertip indices in MediaPipe hand model (thumb to pinky)
+        # Fingertip indices in MediaPipe hand model (pinky to thumb)
         fingertip_indices = [20, 16, 12, 8, 4]
 
         # Calculate average distance from fingertips to the palm center
         distances = []
-        for tip_idx in fingertip_indices:
+        for i, tip_idx in enumerate(fingertip_indices):
             tip_pos = np.array([
                 hand_landmarks.landmark[tip_idx].x,
                 hand_landmarks.landmark[tip_idx].y,
                 hand_landmarks.landmark[tip_idx].z
             ])
-            # Calculate Euclidean distance
-            distance = np.linalg.norm(tip_pos - palm_center)
-            distances.append(distance)
-            if tip_idx == 4:
-                thumb_tip = tip_pos
-            elif tip_idx == 8:
-                index_finger_tip = tip_pos
-            elif tip_idx == 12:
-                middle_finger_tip = tip_pos
-            elif tip_idx == 20:
-                pinky_tip = tip_pos
-
-        # Average distances for the four fingers (excluding the thumb)
-        avg_distance = np.mean(distances[1:])
-
-        # distance of each finger
-        thumb_distance = np.linalg.norm(thumb_tip - ring_MCP)
-        index_finger_distance = np.linalg.norm(index_finger_tip - index_finger_center)
-        middle_finger_distance = np.linalg.norm(middle_finger_tip - middle_finger_center)
+            
+            # Calculate Euclidean distance from the thumb tip to the ring MCP
+            if tip_idx == 4:  # Thumb
+                distance = np.linalg.norm(tip_pos - ring_finger_MCP)
+                distances.append(distance)
+            # For all other fingers, use the corresponding center
+            else:
+                center_idx = min(i, len(centers) - 1)  # Ensure we don't go out of bounds
+                distance = np.linalg.norm(tip_pos - centers[center_idx])
+                distances.append(distance)
 
         # Normalize the distances by the hand scale to get relative measures
-        norm_avg = avg_distance / hand_scale
-        norm_thumb = thumb_distance / hand_scale
+        normalized_distances = [x / hand_scale for x in distances]
 
         # Define empirical calibration values; adjust these based on your setup
-        # They could differ between left and right hands if necessary using an if statement
-        baseline_finger = 1   # Example baseline for left hand overall finger openness
-        baseline_thumb = 0.45 # Example baseline for left thumb openness
+        baseline_finger = 1   # Example baseline for finger openness
+        baseline_thumb = 0.45 # Example baseline for thumb openness
 
         # Define a range for normalization (this represents the expected variation between closed and open)
         range_val = 0.9
-        normalized_distance = np.clip((norm_avg - baseline_finger) / range_val, 0, 1)
-        normalized_thumb_distance = np.clip((norm_thumb - baseline_thumb) / range_val, 0, 1)
+        
+        # Apply different baselines for thumb vs. other fingers
+        normalized_values = []
+        for i, dist in enumerate(normalized_distances):
+            if i == 4:  # Thumb (last element in our list)
+                norm_val = np.clip((dist - baseline_thumb) / range_val, 0, 1)
+            else:
+                norm_val = np.clip((dist - baseline_finger) / range_val, 0, 1)
+            normalized_values.append(norm_val)
 
-        return normalized_distance, normalized_thumb_distance
+        return normalized_values
 
-    def process_frame(self, frame) -> Tuple[Any, int | Any, Any]:
+    def process_frame(self, frame) -> Tuple[Any, float, float, float, float, float]:
         """
-        Process a video frame and return the processed frame and hand openness value.
+        Process a video frame and return the processed frame and hand openness values.
 
         Args:
             frame: Video frame from webcam
@@ -117,7 +114,8 @@ class SimpleHandTracker:
         Returns:
             Tuple containing:
             - Processed frame with drawings
-            - Hand openness value (0 to 1) or 1 if no hand detected
+            - Hand openness values (0 to 1) for pinky, ring, middle, index, thumb
+              or default 1 values if no hand detected
         """
         # Convert BGR to RGB for MediaPipe
         rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
@@ -125,12 +123,12 @@ class SimpleHandTracker:
         # Process the frame
         results = self.hands.process(rgb_frame)
 
-        hand_openness = 1  # Default value if no hand is detected
-        thumb_openness = 1
-        index_openness = 1
-        middle_openness = 1
-        ring_openness = 1
+        # Default values if no hand is detected
         pinky_openness = 1
+        ring_openness = 1
+        middle_openness = 1
+        index_openness = 1
+        thumb_openness = 1
 
         # If hand landmarks are detected
         if results.multi_hand_landmarks:
@@ -141,27 +139,36 @@ class SimpleHandTracker:
             self.mp_draw.draw_landmarks(
                 frame, hand_landmarks, self.mp_hands.HAND_CONNECTIONS)
 
-            # Calculate hand openness
-            hand_openness = self.calculate_hand_openness(hand_landmarks)[0]
-            thumb_openness = self.calculate_hand_openness(hand_landmarks)[1]
+            # Calculate hand openness for all fingers (pinky to thumb)
+            openness_values = self.calculate_hand_openness(hand_landmarks)
+            
+            # Assign values to individual fingers (order is pinky to thumb)
+            pinky_openness = openness_values[0]
+            ring_openness = openness_values[1]
+            middle_openness = openness_values[2]
+            index_openness = openness_values[3]
+            thumb_openness = openness_values[4]
 
-            # Display the openness value on frame
-            cv2.putText(frame, f"Hand openness: {hand_openness:.2f}",
-                        (10, 100), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
+            # Display the openness values on frame
+            cv2.putText(frame, f"Pinky openness: {pinky_openness:.2f}",
+                        (10, 110), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 1)
+            cv2.putText(frame, f"Ring openness: {ring_openness:.2f}",
+                        (10, 125), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 1)
+            cv2.putText(frame, f"Middle finger openness: {middle_openness:.2f}",
+                        (10, 140), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 1)
+            cv2.putText(frame, f"Index finger openness: {index_openness:.2f}",
+                        (10, 155), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 1)
             cv2.putText(frame, f"Thumb openness: {thumb_openness:.2f}",
-                        (10, 130), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
-            cv2.putText(frame, f"index finger openness: {index_openness:.2f}",
-                        (10, 160), cv2.FONT_HERSHEY_SIMPLEX, 1, (43,122,31), 2)
+                        (10, 170), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 1)
 
-        return frame, hand_openness, thumb_openness, index_openness
+        return frame, pinky_openness, ring_openness, middle_openness, index_openness, thumb_openness
 
     def run_test(self):
         """
         Test function to run hand tracking with webcam feed.
-        Shows the video feed and prints the servo angle.
+        Shows the video feed and prints the servo angles.
         """
         cap = cv2.VideoCapture(0)
-
 
         while cap.isOpened():
             success, frame = cap.read()
@@ -170,15 +177,26 @@ class SimpleHandTracker:
                 break
 
             # Process the frame
-            frame, hand_openness, thumb_openness = self.process_frame(frame)
+            frame, pinky_openness, ring_openness, middle_openness, index_openness, thumb_openness = self.process_frame(frame)
 
             # Convert hand openness to servo angle (0 to 180 degrees)
-            servo_angle = int(hand_openness * 180)
+            servo_angle1 = int(pinky_openness * 180)
+            servo_angle2 = int(ring_openness * 180)
+            servo_angle3 = int(middle_openness * 180)
+            servo_angle4 = int(index_openness * 180)
+            servo_angle5 = int(thumb_openness * 180)
 
-            # Display servo angle
-            cv2.putText(frame, f"Servo angle: {servo_angle}",
-                        (10, 70), cv2.FONT_HERSHEY_SIMPLEX,
-                        1, (0, 255, 0), 2)
+            # Display servo angles with proper spacing
+            cv2.putText(frame, f"Pinky servo angle: {servo_angle1}",
+                        (10, 250), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 1)
+            cv2.putText(frame, f"Ring servo angle: {servo_angle2}",
+                        (10, 280), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 1)
+            cv2.putText(frame, f"Middle servo angle: {servo_angle3}",
+                        (10, 310), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 1)
+            cv2.putText(frame, f"Index servo angle: {servo_angle4}",
+                        (10, 340), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 1)
+            cv2.putText(frame, f"Thumb servo angle: {servo_angle5}",
+                        (10, 370), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 1)
 
             # Show the frame
             cv2.imshow('Hand Tracking', frame)
