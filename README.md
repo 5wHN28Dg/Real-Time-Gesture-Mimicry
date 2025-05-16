@@ -61,7 +61,10 @@ This code started as a template from Claude AI, and I’ve since heavily hacked 
   * [ ] Initial Calibration Routine.
   * [ ] Running Min/Max Tracking.
   * [ ] Statistical & ML-Based Normalization.
-* [ ] Extend control to each finger individually (WIP) 🔄
+* [ ] Extend control to each finger individually 🔄
+  * [x] initial implementation
+  * [ ] review
+  * [ ] hardware testing
 * [ ] Refactor and optimize.
 * [ ] Rewrite the entire project from scratch ⏸️
 
