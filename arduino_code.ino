@@ -8,11 +8,11 @@ Servo indexServo;
 Servo thumbServo;
 
 // Pin for servo control - using pins 9 and onward which are PWM capable
-const int servoPin = 9;
-const int servoPin2 = 10;
-const int servoPin3 = 11;
-const int servoPin4 = 12;
-const int servoPin5 = 13;
+const int servoPin = 3;
+const int servoPin2 = 5;
+const int servoPin3 = 6;
+const int servoPin4 = 9;
+const int servoPin5 = 10;
 
 // Variable to store the incoming angle
 int targetAngle = 90;  // Start at middle position
