@@ -87,7 +87,7 @@ class HandControlSystem:
         or servo_angle5 != self.last_sent_servo_angle5):
             try:
                 # Convert angle to string and add newline
-                command = f"{angle}, {servo_angle2}, {servo_angle3}, {servo_angle4}, {servo_angle5}\n"
+                command = f"pinky {angle}, ring {servo_angle2}, middle {servo_angle3}, index {servo_angle4}, thumb {servo_angle5}\n"
                 self.arduino.write(command.encode())
 
                 # Update last sent angle
@@ -207,7 +207,7 @@ class HandControlSystem:
 
             if self.use_hardware:
                 # Move servo to neutral position before closing
-                self.send_to_arduino(90, 90, 90, 90, 90)
+                self.send_to_arduino(180, 180, 180, 180, 180)
                 time.sleep(0.5)  # Wait for servo to move
                 self.arduino.close()
                 print("Arduino connection closed")
