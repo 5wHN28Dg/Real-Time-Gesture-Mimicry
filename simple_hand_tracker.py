@@ -212,3 +212,4 @@ class SimpleHandTracker:
 if __name__ == "__main__":
     tracker = SimpleHandTracker()
     tracker.run_test()
+    
