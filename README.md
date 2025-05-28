@@ -43,7 +43,9 @@ This code started as a template from Claude AI, and I’ve since heavily hacked 
 
 ### Control Logic flowchart
 
-<img src="Assets/flowchart.svg" alt="Animated SVG" width="600" />
+<p align="center">
+  <img src="Assets/flowchart.svg" alt="Animated SVG" width="600" />
+</p>
 
 ### 📝 TODO
 
