@@ -34,6 +34,12 @@ This code started as a template from Claude AI, and I’ve since heavily hacked 
 
 ---
 
+### Control Logic flowchart
+
+<p align="center">
+  <img src="Assets/flowchart.svg" alt="Animated SVG" width="600" />
+</p>
+
 ### 🔍 Quick Tips
 
 * **Latest changes?** Check the `testing` branch for the freshest updates.
