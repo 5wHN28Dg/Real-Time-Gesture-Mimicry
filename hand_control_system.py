@@ -155,6 +155,10 @@ class HandControlSystem:
             print("Error: Could not open webcam")
             return
 
+        # for showing fps
+        prev_time = 0
+        curr_time = 0
+
         try:
             while True:
                 # Read frame from webcam
@@ -162,6 +166,11 @@ class HandControlSystem:
                 if not success:
                     print("Error: Could not read frame")
                     break
+                
+                # for showing fps
+                curr_time = time.time()
+                fps = 1/(curr_time - prev_time)
+                prev_time = curr_time
 
                 # Process the frame to detect hand and get openness value
                 frame, pinky_openness, ring_openness, middle_openness, index_openness, thumb_openness = self.tracker.process_frame(frame)
@@ -191,6 +200,8 @@ class HandControlSystem:
                 cv2.putText(frame, f"thumb Servo Angle: {servo_angle5}",
                             (10, 95), cv2.FONT_HERSHEY_SIMPLEX,
                             0.5, (0, 255, 0), 1)
+                cv2.putText(frame, str(int(fps)), (610, 20), cv2.FONT_HERSHEY_PLAIN,
+                            1.5, (255, 0, 255), 2)
 
                 # Show the frame
                 cv2.imshow('Hand Control System', frame)
