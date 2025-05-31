@@ -15,11 +15,11 @@ const int servoPin4 = 9;  // index
 const int servoPin5 = 10; // thumb
 
 // Variables to store the incoming angles
-int pinkyAngle = 0;
-int ringAngle = 0;
+int pinkyAngle = 180;
+int ringAngle = 180;
 int middleAngle = 0;
 int indexAngle = 0;
-int thumbAngle = 0;
+int thumbAngle = 180;
 
 // Buffer to store incoming serial data
 String inputString = "";      // a String to hold incoming data

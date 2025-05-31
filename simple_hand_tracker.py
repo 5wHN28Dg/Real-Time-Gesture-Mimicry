@@ -17,7 +17,7 @@ class SimpleHandTracker:
         # Used for drawing hand landmarks on the image
         self.mp_draw = mp.solutions.drawing_utils
 
-    def calculate_hand_openness(self, hand_landmarks) -> List[float]:
+    def calculate_hand_openness(self, hand_landmarks) -> Tuple[List[float], dict[str, np.ndarray]]:
         """
         Calculate how open each finger is based on the 3D distance between fingertips and key points on the palm.
         Returns a list of values between 0 (closed) and 1 (open) for each finger (pinky to thumb).
@@ -54,6 +54,13 @@ class SimpleHandTracker:
         middle_finger_center = np.mean(np.array([wrist, middle_finger_MCP]), axis=0)
         ring_finger_center = np.mean(np.array([wrist, ring_finger_MCP]), axis=0)
         pinky_finger_center = np.mean(np.array([wrist, pinky_MCP]), axis=0)
+
+        custom_centers = {
+            "index_center": index_finger_center,
+            "middle_center": middle_finger_center,
+            "ring_center": ring_finger_center,
+            "pinky_center": pinky_finger_center
+        }
         
         # Order matches fingertip_indices: pinky, ring, middle, index, thumb
         centers = [pinky_finger_center, ring_finger_center, middle_finger_center, index_finger_center]
@@ -102,7 +109,7 @@ class SimpleHandTracker:
                 norm_val = np.clip((dist - baseline_finger) / range_val, 0, 1)
             normalized_values.append(norm_val)
 
-        return normalized_values
+        return normalized_values, custom_centers
 
     def process_frame(self, frame) -> Tuple[Any, float, float, float, float, float]:
         """
@@ -122,6 +129,7 @@ class SimpleHandTracker:
 
         # Process the frame
         results = self.hands.process(rgb_frame)
+        h, w, _ = frame.shape
 
         # Default values if no hand is detected
         pinky_openness = 1
@@ -140,7 +148,7 @@ class SimpleHandTracker:
                 frame, hand_landmarks, self.mp_hands.HAND_CONNECTIONS)
 
             # Calculate hand openness for all fingers (pinky to thumb)
-            openness_values = self.calculate_hand_openness(hand_landmarks)
+            openness_values, custom_centers = self.calculate_hand_openness(hand_landmarks)
             
             # Assign values to individual fingers (order is pinky to thumb)
             pinky_openness = openness_values[0]
@@ -160,6 +168,10 @@ class SimpleHandTracker:
                         (10, 155), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 1)
             cv2.putText(frame, f"Thumb openness: {thumb_openness:.2f}",
                         (10, 170), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 1)
+            for name, center in custom_centers.items():
+                cx, cy = int(center[0] * w), int(center[1] * h)
+                # Draw a filled circle
+                cv2.circle(frame, (cx, cy), radius=5, color=(0,0,255), thickness=-1)
 
         return frame, pinky_openness, ring_openness, middle_openness, index_openness, thumb_openness
 
