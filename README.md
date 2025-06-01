@@ -34,18 +34,20 @@ This code started as a template from Claude AI, and I’ve since heavily hacked 
 
 ---
 
+### Control Logic flowchart
+
+<p align="center">
+  <img src="Assets/flowchart.svg" alt="Animated SVG" width="600" />
+</p>
+
+---
+
 ### 🔍 Quick Tips
 
 * **Latest changes?** Check the `testing` branch for the freshest updates.
 * **Code breakdown?** Peek at [code dissection.md (WIP)](https://github.com/5wHN28Dg/Real-Time-Gesture-Mimicry/blob/main/code%20dissection%20%5BWIP%5D.md).
 
 ---
-
-### Control Logic flowchart
-
-<p align="center">
-  <img src="Assets/flowchart.svg" alt="Animated SVG" width="600" />
-</p>
 
 ### 📝 TODO
 
@@ -59,6 +61,8 @@ This code started as a template from Claude AI, and I’ve since heavily hacked 
 
   * [ ] Grasp the underlying math.
 * [ ] Leverage Intel iGPU for inference.
+  * [ ] switch over to the Tasks API
+  * [ ] use OpenVINO for inference on intel HW?
 * [ ] Write comprehensive documentation ⏸️
   * [x] phase 1: initial draft
   * [ ] phase 2: a deep dive into the technical and mathematical details
