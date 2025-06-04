@@ -63,7 +63,7 @@ This code started as a template from Claude AI, and I’ve since heavily hacked 
 * [ ] Leverage Intel iGPU for inference.
   * [ ] switch over to the Tasks API
   * [ ] use OpenVINO for inference on intel HW?
-* [ ] Write comprehensive documentation ⏸️
+* [ ] Write comprehensive documentation
   * [x] phase 1: initial draft
   * [ ] phase 2: a deep dive into the technical and mathematical details
   * [ ] phase 3: polishing
@@ -75,8 +75,9 @@ This code started as a template from Claude AI, and I’ve since heavily hacked 
   * [x] initial implementation
   * [x] review
   * [x] hardware testing
+* [ ] auto-detect the number of actuators?
 * [ ] Refactor and optimize.
-* [ ] Rewrite the entire project from scratch ⏸️
+* [ ] Rewrite the entire project from scratch 🔄
 
 ---
 
