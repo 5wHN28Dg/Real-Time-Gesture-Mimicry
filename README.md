@@ -61,7 +61,7 @@ This code started as a template from Claude AI, and I’ve since heavily hacked 
 
   * [ ] Grasp the underlying math.
 * [ ] Leverage Intel iGPU for inference.
-  * [ ] switch over to the Tasks API
+  * [ ] switch over to the Tasks API 🔄
   * [ ] use OpenVINO for inference on intel HW?
 * [ ] Write comprehensive documentation
   * [x] phase 1: initial draft
