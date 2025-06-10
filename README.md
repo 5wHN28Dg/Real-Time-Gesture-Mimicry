@@ -78,6 +78,10 @@ This code started as a template from Claude AI, and I’ve since heavily hacked 
 * [ ] auto-detect the number of actuators?
 * [ ] Refactor and optimize.
 * [ ] Rewrite the entire project from scratch 🔄
+  * [ ] Phase 1: Conceptual Ownership
+  * [ ] Phase 2: Architecture Design
+  * [ ] Phase 3: Implementation with Intentional Reference
+  * [ ] Phase 4: Personal Touches
 
 ---
 
