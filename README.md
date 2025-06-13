@@ -35,7 +35,12 @@ This code started as a template from Claude AI, and I’ve since heavily hacked 
 ---
 
 ## Demo video
-[![Watch on YouTube](https://img.youtube.com/vi/6zBArJ0yIYY/0.jpg)](https://www.youtube.com/watch?v=6zBArJ0yIYY)
+<a href="https://www.youtube.com/watch?v=6zBArJ0yIYY">
+  <img src="https://img.youtube.com/vi/6zBArJ0yIYY/hqdefault.jpg"
+       alt="Watch on YouTube"
+       width="560"
+       height="315" />
+</a>
 
 ### Control Logic flowchart
 
