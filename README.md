@@ -34,6 +34,9 @@ This code started as a template from Claude AI, and I’ve since heavily hacked 
 
 ---
 
+## Demo video
+[![Watch on YouTube](https://img.youtube.com/vi/6zBArJ0yIYY/0.jpg)](https://www.youtube.com/watch?v=6zBArJ0yIYY)
+
 ### Control Logic flowchart
 
 <p align="center">
