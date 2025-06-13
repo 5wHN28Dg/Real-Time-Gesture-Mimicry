@@ -2,29 +2,21 @@
 
 *Controlling a 3D-Printed Robotic Hand Using Webcam-Based Hand Tracking*
 
----
-
-### 🚀 Project Overview
+## 🚀 Project Overview
 
 This repo doubles as my graduation project and personal learning journey. My end goal is to rewrite the entire codebase from scratch. I honestly wasn’t planning to make it public until then, but I’m curious if opening it up early might help me (and maybe others) in any way so let’s see how this goes!
-
----
 
 #### ⚠️ Disclaimer
 
 This code started as a template from Claude AI, and I’ve since heavily hacked on it—I'm a total beginner in Python (and coding in general), so still learning as I go.
 
----
-
-### 🔧 Dependencies
+## 🔧 Dependencies
 
 * **mediapipe** (hand recognition and tracking)
 * **OpenCV** (video capture and image processing)
 * **pySerial** (Arduino detection and communication)
 
----
-
-### 🗂 File Structure
+## 🗂 File Structure
 
 * `simple_hand_tracker.py` — starts the camera, detects your hand, calculates openness metrics.
 * `hand_control_system.py` — converts openness values to servo angles and sends commands to the Arduino.
@@ -32,33 +24,28 @@ This code started as a template from Claude AI, and I’ve since heavily hacked 
 * `code dissection (WIP).md` — in-depth breakdown of how everything works.
 * `requirements.txt` — all project dependencies.
 
----
-
 ## Demo video
 <p align="center">
     <a href="https://www.youtube.com/watch?v=6zBArJ0yIYY">
     <img src="https://img.youtube.com/vi/6zBArJ0yIYY/maxresdefault.jpg"
         alt="Watch on YouTube"
-        width="600" />
+        width="600"
+ />
     </a>
 </p>
 
-### Control Logic flowchart
+## Control Logic flowchart
 
 <p align="center">
   <img src="Assets/flowchart.svg" alt="Animated SVG" width="600" />
 </p>
 
----
-
-### 🔍 Quick Tips
+## 🔍 Quick Tips
 
 * **Latest changes?** Check the `testing` branch for the freshest updates.
 * **Code breakdown?** Peek at [code dissection.md (WIP)](https://github.com/5wHN28Dg/Real-Time-Gesture-Mimicry/blob/main/code%20dissection%20%5BWIP%5D.md).
 
----
-
-### 📝 TODO
+## 📝 TODO
 
 * [x] Separate thumb from other fingers.
 * [x] Map openness values to servo angles.
@@ -92,8 +79,6 @@ This code started as a template from Claude AI, and I’ve since heavily hacked 
   * [ ] Phase 3: Implementation with Intentional Reference
   * [ ] Phase 4: Personal Touches
 
----
-
-### 🤝 Contributions & Feedback
+## 🤝 Contributions & Feedback
 
 Feel free to submit issues, suggest features, or even open a PR—your insights could speed up my learning and improve the project for everyone!
