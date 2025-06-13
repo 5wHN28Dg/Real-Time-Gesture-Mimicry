@@ -39,8 +39,7 @@ This code started as a template from Claude AI, and I’ve since heavily hacked 
     <a href="https://www.youtube.com/watch?v=6zBArJ0yIYY">
     <img src="https://img.youtube.com/vi/6zBArJ0yIYY/maxresdefault.jpg"
         alt="Watch on YouTube"
-        width="1280"
-        height="720" />
+        width="600" />
     </a>
 </p>
 
