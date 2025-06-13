@@ -59,7 +59,7 @@ pyserial==3.5
 python-dateutil==2.9.0.post0
 pyzmq==26.4.0
 referencing==0.36.2
-requests==2.32.3
+requests==2.32.4
 rpds-py==0.24.0
 scipy==1.15.1
 sentencepiece==0.2.0
