@@ -24,7 +24,7 @@ This code started as a template from Claude AI, and I’ve since heavily hacked 
 * `code dissection (WIP).md` — in-depth breakdown of how everything works.
 * `requirements.txt` — all project dependencies.
 
-## Demo video
+## Demo video (click to watch on YouTube)
 <p align="center">
     <a href="https://www.youtube.com/watch?v=6zBArJ0yIYY">
     <img src="https://img.youtube.com/vi/6zBArJ0yIYY/maxresdefault.jpg"
