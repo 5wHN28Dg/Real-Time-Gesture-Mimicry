@@ -53,8 +53,8 @@ This code started as a template from Claude AI, and I’ve since heavily hacked 
 * [x] make the openness metric more invariant to hand size and distance from camera
 * [x] Auto-detect host OS and adjust Arduino port path (needs more testing).
 * [x] Calibrate thumb openness relative to the ring-finger base.
+* [ ] package the program into executables for Linux, MacOS, Windows
 * [ ] Decouple hand orientation from openness metric:
-
   * [ ] Grasp the underlying math.
 * [ ] Leverage Intel iGPU for inference.
   * [ ] switch over to the Tasks API 🔄
