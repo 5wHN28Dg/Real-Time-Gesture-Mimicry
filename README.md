@@ -8,7 +8,8 @@ This repo doubles as my graduation project and personal learning journey. My end
 
 #### ⚠️ Disclaimer
 
-This code started as a template from Claude AI, and I’ve since heavily hacked on it—I'm a total beginner in Python (and coding in general), so still learning as I go.
+* This code started as a template from Claude AI, and I’ve since heavily hacked on it—I'm a total beginner in Python (and coding in general), so still learning as I go.
+* **Development on this project has been paused until further notice. I’ve decided it’s best, for now, to focus my efforts elsewhere, and I’m already diving into a new project I’ve been eager to tackle for a long time.**
 
 ## 🔧 Dependencies
 
