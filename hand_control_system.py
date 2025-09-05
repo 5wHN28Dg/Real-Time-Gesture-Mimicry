@@ -5,6 +5,7 @@ from simple_hand_tracker import SimpleHandTracker
 import platform
 from serial.tools import list_ports
 
+
 class HandControlSystem:
     def __init__(self, use_hardware=True, com_port=None):
         """
@@ -33,8 +34,7 @@ class HandControlSystem:
         self.last_sent_servo_angle4 = -1
         self.last_sent_servo_angle5 = -1
 
-
-    # Connect to Arduino if we're using hardware
+        # Connect to Arduino if we're using hardware
         if use_hardware:
             try:
                 # Try to establish serial connection
@@ -62,19 +62,21 @@ class HandControlSystem:
         for port in ports:
             if "Arduino" in port.description:
                 return port.device
-        
+
         # fallback defaults based on OS
         os_name = platform.system()
         if os_name == "Windows":
-            return "COM3"                   # default for windows
+            return "COM3"  # default for windows
         elif os_name == "Linux":
-            return "/dev/ttyACM0"           # Typical default for Linux (could also be '/dev/ttyUSB0')
+            return "/dev/ttyACM0"  # Typical default for Linux (could also be '/dev/ttyUSB0')
         elif os_name == "Darwin":
             return "/dev/tty.usbmodem14101"  # Example default for macOS
         else:
-            return None                     # unknown system
+            return None  # unknown system
 
-    def send_to_arduino(self, angle, servo_angle2, servo_angle3, servo_angle4, servo_angle5):
+    def send_to_arduino(
+        self, angle, servo_angle2, servo_angle3, servo_angle4, servo_angle5
+    ):
         """
         Send an angle command to the Arduino.
 
@@ -82,9 +84,13 @@ class HandControlSystem:
             angle (int): Servo angle between 0 and 180 degrees
         """
         # Only send if we're using hardware and the angle has changed
-        if self.use_hardware and (angle != self.last_sent_angle or servo_angle2 != self.last_sent_servo_angle2
-        or servo_angle3 != self.last_sent_servo_angle3 or servo_angle4 != self.last_sent_servo_angle4
-        or servo_angle5 != self.last_sent_servo_angle5):
+        if self.use_hardware and (
+            angle != self.last_sent_angle
+            or servo_angle2 != self.last_sent_servo_angle2
+            or servo_angle3 != self.last_sent_servo_angle3
+            or servo_angle4 != self.last_sent_servo_angle4
+            or servo_angle5 != self.last_sent_servo_angle5
+        ):
             try:
                 # Convert angle to string and add newline
                 command = f"pinky {angle}, ring {servo_angle2}, middle {servo_angle3}, index {servo_angle4}, thumb {servo_angle5}\n"
@@ -96,8 +102,9 @@ class HandControlSystem:
                 self.last_sent_servo_angle3 = servo_angle3
                 self.last_sent_servo_angle4 = servo_angle4
                 self.last_sent_servo_angle5 = servo_angle5
-                print(f"Sent angles: {angle}, {servo_angle2}, {servo_angle3}, {servo_angle4}, {servo_angle5}")
-
+                print(
+                    f"Sent angles: {angle}, {servo_angle2}, {servo_angle3}, {servo_angle4}, {servo_angle5}"
+                )
 
                 # Optional: Wait for and print Arduino response
                 # response = self.arduino.readline().decode().strip()
@@ -109,7 +116,14 @@ class HandControlSystem:
                 self.use_hardware = False
                 print("Switching to test mode")
 
-    def map_openness_to_gesture(self, pinky_openness, ring_openness, middle_openness, index_openness, thumb_openness):
+    def map_openness_to_gesture(
+        self,
+        pinky_openness,
+        ring_openness,
+        middle_openness,
+        index_openness,
+        thumb_openness,
+    ):
         """
         Maps the hand openness value to one of three gesture states.
 
@@ -125,20 +139,32 @@ class HandControlSystem:
         servo_angle3 = int(middle_openness * 180)
         servo_angle4 = int(index_openness * 180)
         servo_angle5 = int(thumb_openness * 180)
-        total = pinky_openness + ring_openness + middle_openness + index_openness + thumb_openness
+        total = (
+            pinky_openness
+            + ring_openness
+            + middle_openness
+            + index_openness
+            + thumb_openness
+        )
         openness_avg = total / 5
 
-        
         if openness_avg < 0.3:
             gesture = "Closed"
 
         elif openness_avg > 0.7:
-             gesture = "Open"
+            gesture = "Open"
 
         else:
-             gesture = "Middle"
+            gesture = "Middle"
 
-        return gesture, servo_angle, servo_angle2, servo_angle3, servo_angle4, servo_angle5
+        return (
+            gesture,
+            servo_angle,
+            servo_angle2,
+            servo_angle3,
+            servo_angle4,
+            servo_angle5,
+        )
 
     def run(self):
         """
@@ -166,48 +192,113 @@ class HandControlSystem:
                 if not success:
                     print("Error: Could not read frame")
                     break
-                
+
                 # for showing fps
                 curr_time = time.time()
-                fps = 1/(curr_time - prev_time)
+                fps = 1 / (curr_time - prev_time)
                 prev_time = curr_time
 
                 # Process the frame to detect hand and get openness value
-                frame, pinky_openness, ring_openness, middle_openness, index_openness, thumb_openness = self.tracker.process_frame(frame)
+                (
+                    frame,
+                    pinky_openness,
+                    ring_openness,
+                    middle_openness,
+                    index_openness,
+                    thumb_openness,
+                ) = self.tracker.process_frame(frame)
 
                 # Map hand openness to gesture and servo angle
-                gesture, servo_angle, servo_angle2, servo_angle3, servo_angle4, servo_angle5 = self.map_openness_to_gesture(pinky_openness, ring_openness, middle_openness, index_openness, thumb_openness)
+                (
+                    gesture,
+                    servo_angle,
+                    servo_angle2,
+                    servo_angle3,
+                    servo_angle4,
+                    servo_angle5,
+                ) = self.map_openness_to_gesture(
+                    pinky_openness,
+                    ring_openness,
+                    middle_openness,
+                    index_openness,
+                    thumb_openness,
+                )
 
                 # Send command to Arduino (if using hardware)
-                self.send_to_arduino(servo_angle, servo_angle2, servo_angle3, servo_angle4, servo_angle5)
+                self.send_to_arduino(
+                    servo_angle, servo_angle2, servo_angle3, servo_angle4, servo_angle5
+                )
 
                 # Display gesture and angle information on frame
-                cv2.putText(frame, f"Gesture: {gesture}",
-                            (10, 20), cv2.FONT_HERSHEY_SIMPLEX,
-                            0.5, (0, 255, 0), 1)
-                cv2.putText(frame, f"Pinky Servo Angle: {servo_angle}",
-                            (10, 35), cv2.FONT_HERSHEY_SIMPLEX,
-                            0.5, (0, 255, 0), 1)
-                cv2.putText(frame, f"ring Servo Angle: {servo_angle2}",
-                            (10, 50), cv2.FONT_HERSHEY_SIMPLEX,
-                            0.5, (0, 255, 0), 1)
-                cv2.putText(frame, f"middle Servo Angle: {servo_angle3}",
-                            (10, 65), cv2.FONT_HERSHEY_SIMPLEX,
-                            0.5, (0, 255, 0), 1)
-                cv2.putText(frame, f"index Servo Angle: {servo_angle4}",
-                            (10, 80), cv2.FONT_HERSHEY_SIMPLEX,
-                            0.5, (0, 255, 0), 1)
-                cv2.putText(frame, f"thumb Servo Angle: {servo_angle5}",
-                            (10, 95), cv2.FONT_HERSHEY_SIMPLEX,
-                            0.5, (0, 255, 0), 1)
-                cv2.putText(frame, str(int(fps)), (610, 20), cv2.FONT_HERSHEY_PLAIN,
-                            1.5, (255, 0, 255), 2)
+                cv2.putText(
+                    frame,
+                    f"Gesture: {gesture}",
+                    (10, 20),
+                    cv2.FONT_HERSHEY_SIMPLEX,
+                    0.5,
+                    (0, 255, 0),
+                    1,
+                )
+                cv2.putText(
+                    frame,
+                    f"Pinky Servo Angle: {servo_angle}",
+                    (10, 35),
+                    cv2.FONT_HERSHEY_SIMPLEX,
+                    0.5,
+                    (0, 255, 0),
+                    1,
+                )
+                cv2.putText(
+                    frame,
+                    f"ring Servo Angle: {servo_angle2}",
+                    (10, 50),
+                    cv2.FONT_HERSHEY_SIMPLEX,
+                    0.5,
+                    (0, 255, 0),
+                    1,
+                )
+                cv2.putText(
+                    frame,
+                    f"middle Servo Angle: {servo_angle3}",
+                    (10, 65),
+                    cv2.FONT_HERSHEY_SIMPLEX,
+                    0.5,
+                    (0, 255, 0),
+                    1,
+                )
+                cv2.putText(
+                    frame,
+                    f"index Servo Angle: {servo_angle4}",
+                    (10, 80),
+                    cv2.FONT_HERSHEY_SIMPLEX,
+                    0.5,
+                    (0, 255, 0),
+                    1,
+                )
+                cv2.putText(
+                    frame,
+                    f"thumb Servo Angle: {servo_angle5}",
+                    (10, 95),
+                    cv2.FONT_HERSHEY_SIMPLEX,
+                    0.5,
+                    (0, 255, 0),
+                    1,
+                )
+                cv2.putText(
+                    frame,
+                    str(int(fps)),
+                    (610, 20),
+                    cv2.FONT_HERSHEY_PLAIN,
+                    1.5,
+                    (255, 0, 255),
+                    2,
+                )
 
                 # Show the frame
-                cv2.imshow('Hand Control System', frame)
+                cv2.imshow("Hand Control System", frame)
 
                 # Break loop on 'q' press
-                if cv2.waitKey(1) & 0xFF == ord('q'):
+                if cv2.waitKey(1) & 0xFF == ord("q"):
                     break
 
         finally:
