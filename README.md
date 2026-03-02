@@ -1,85 +1,130 @@
 # Real-Time Gesture Mimicry
 
-*Controlling a 3D-Printed Robotic Hand Using Webcam-Based Hand Tracking*
+**Controlling a 3D-Printed Robotic Hand Using Webcam-Based Hand Tracking**
 
-## 🚀 Project Overview
 
-This repo doubles as my graduation project and personal learning journey. My end goal is to rewrite the entire codebase from scratch. I honestly wasn’t planning to make it public until then, but I’m curious if opening it up early might help me (and maybe others) in any way so let’s see how this goes!
+## Overview
 
-#### ⚠️ Disclaimer
+This project mirrors a human hand in real time using:
 
-* This code started as a template from Claude AI, and I’ve since heavily hacked on it—I'm a total beginner in Python (and coding in general), so still learning as I go.
-* **Development on this project has been paused until further notice. I’ve decided it’s best, for now, to focus my efforts elsewhere, and I’m already diving into a new project I’ve been eager to tackle for a long time.**
+- A webcam for hand tracking
+  
+- MediaPipe for landmark detection
+  
+- An Arduino-controlled 3D-printed robotic hand
+  
 
-## 🔧 Dependencies
+The system detects finger openness and maps it to servo angles, allowing the robotic hand to mimic live gestures.
 
-* **mediapipe** (hand recognition and tracking)
-* **OpenCV** (video capture and image processing)
-* **pySerial** (Arduino detection and communication)
+This repository documents the full pipeline: vision → metric extraction → control logic → actuation.
 
-## 🗂 File Structure
 
-* `simple_hand_tracker.py` — starts the camera, detects your hand, calculates openness metrics.
-* `hand_control_system.py` — converts openness values to servo angles and sends commands to the Arduino.
-* `Arduino_code.ino` — sets up the Arduino to receive angles and drive the servos.
-* `code dissection (WIP).md` — in-depth breakdown of how everything works.
-* `requirements.txt` — all project dependencies.
+## Demo
 
-## Demo video (click to watch on YouTube)
-<p align="center">
-    <a href="https://www.youtube.com/watch?v=6zBArJ0yIYY">
-    <img src="https://img.youtube.com/vi/6zBArJ0yIYY/maxresdefault.jpg"
-        alt="Watch on YouTube"
-        width="600"
- />
-    </a>
-</p>
+<p align="center"> <a href="https://www.youtube.com/watch?v=6zBArJ0yIYY"> <img src="https://img.youtube.com/vi/6zBArJ0yIYY/maxresdefault.jpg" alt="Watch on YouTube" width="600" /> </a> </p>
 
-## Control Logic flowchart
 
-<p align="center">
-  <img src="Assets/flowchart.svg" alt="Animated SVG" width="600" />
-</p>
+## System Architecture
 
-## 🔍 Quick Tips
+1. **Hand Detection**
+  
+  - MediaPipe extracts 21 hand landmarks.
+2. **Openness Metric**
+  
+  - Finger states are calculated relative to anatomical reference points.
+3. **Mapping Layer**
+  
+  - Openness values are converted into servo angles.
+4. **Actuation**
+  
+  - Angles are transmitted to the Arduino via serial communication.
+5. **Execution**
+  
+  - Servos drive the 3D-printed hand accordingly.
 
-* **Latest changes?** Check the `testing` branch for the freshest updates.
-* **Code breakdown?** Peek at [code dissection.md (WIP)](https://github.com/5wHN28Dg/Real-Time-Gesture-Mimicry/blob/main/code%20dissection%20%5BWIP%5D.md).
+### Control Flow
 
-## 📝 TODO
+<p align="center"> <img src="Assets/flowchart.svg" alt="Animated SVG" width="600" /> </p>
 
-* [x] Separate thumb from other fingers.
-* [x] Map openness values to servo angles.
-* [x] Add depth perception to improve accuracy (if possible).
-* [x] make the openness metric more invariant to hand size and distance from camera
-* [x] Auto-detect host OS and adjust Arduino port path (needs more testing).
-* [x] Calibrate thumb openness relative to the ring-finger base.
-* [ ] package the program into executables for Linux, MacOS, Windows
-* [ ] Decouple hand orientation from openness metric:
-  * [ ] Grasp the underlying math.
-* [ ] Leverage Intel iGPU for inference.
-  * [ ] switch over to the Tasks API 🔄
-  * [ ] use OpenVINO for inference on intel HW?
-* [ ] Write comprehensive documentation
-  * [x] phase 1: initial draft
-  * [ ] phase 2: a deep dive into the technical and mathematical details
-  * [ ] phase 3: polishing
-* [ ] Self-Adjusting Calibration process so that the system self-adjusts to different users’ hand sizes without manual baseline tweaking
-  * [ ] Initial Calibration Routine.
-  * [ ] Running Min/Max Tracking.
-  * [ ] Statistical & ML-Based Normalization.
-* [x] Extend control to each finger individually.
-  * [x] initial implementation
-  * [x] review
-  * [x] hardware testing
-* [ ] auto-detect the number of actuators?
-* [ ] Refactor and optimize.
-* [ ] Rewrite the entire project from scratch 🔄
-  * [ ] Phase 1: Conceptual Ownership
-  * [ ] Phase 2: Architecture Design
-  * [ ] Phase 3: Implementation with Intentional Reference
-  * [ ] Phase 4: Personal Touches
+## Project Status
 
-## 🤝 Contributions & Feedback
+> ⚠ Development is currently paused.
+
+The system works in its current experimental form, but it is not production-ready.  
+A full rewrite is planned in the future to achieve architectural clarity and conceptual ownership.
+
+
+## Dependencies
+
+- `mediapipe` — hand landmark detection
+  
+- `opencv-python` — video capture and processing
+  
+- `pyserial` — Arduino communication
+  
+
+Install with:
+
+```bash
+pip install -r requirements.txt
+```
+
+
+## File Structure
+
+- `simple_hand_tracker.py` — camera + landmark detection + openness calculation
+  
+- `hand_control_system.py` — mapping + serial communication
+  
+- `Arduino_code.ino` — servo control firmware
+  
+- `code dissection [WIP].md` — technical breakdown
+  
+- `requirements.txt` — Python dependencies
+  
+
+
+## Philosophy
+
+This project is built primarily for my own use and learning.
+
+It evolves when I need something, want to improve something, or decide to explore an idea.  
+It is not driven by feature requests, deadlines, or a public roadmap.
+
+You are welcome to use it, fork it, or build on it.
+
+However:
+
+- There are no guarantees of support
+  
+- There are no timelines
+  
+- Feature requests may be ignored
+  
+- The direction of the project is decided solely by me
+  
+
+If you need a specific feature, open a PR and implement it.
+
+Donations are appreciated, but they do not grant influence over the project.
+
+This is a personal tool first, public software second.
+
+
+## Roadmap (Long-Term)
+
+- Decouple hand orientation from openness metric
+  
+- Improve calibration robustness
+  
+- Hardware abstraction for variable actuator counts
+  
+- Packaging for Linux / macOS / Windows
+  
+- Full rewrite with redesigned architecture
+  
+
+
+## Contributions
 
 Please read [CONTRIBUTING.md](CONTRIBUTING.md) before opening issues or pull requests.
