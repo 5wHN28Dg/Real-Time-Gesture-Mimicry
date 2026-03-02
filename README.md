@@ -82,4 +82,4 @@ This repo doubles as my graduation project and personal learning journey. My end
 
 ## 🤝 Contributions & Feedback
 
-Feel free to submit issues, suggest features, or even open a PR—your insights could speed up my learning and improve the project for everyone!
+Please read [CONTRIBUTING.md](CONTRIBUTING.md) before opening issues or pull requests.
