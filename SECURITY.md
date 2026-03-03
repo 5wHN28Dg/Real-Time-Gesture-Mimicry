@@ -2,9 +2,9 @@
 
 Only the latest version provided through official distribution channels is supported with security updates.
 
-If you discover a security issue, please report it privately by emailing:
+If you discover a security issue, please report it privately by filling out this form:
 
-5gk5g.sneezing010@simplelogin.com
+https://github.com/5wHN28Dg/Real-Time-Gesture-Mimicry/security/advisories/new
 
 Do not open public issues for security vulnerabilities.
 
